@@ -26,9 +26,14 @@ public class MenuManager : MonoBehaviour
 		}
 	}
 	
+	/* FIXME: repurpose
+				rename to MenuOptionExecute(int menuOptionId)
+				rename sceneNames to menuOptions
+	*/
+	
 	void LoadScene(int sceneIndex) {
 		if (sceneIndex < 0 || sceneIndex >= sceneNames.Length) {
-			Debug.Log("LoadScene: got sceneIndex " + sceneIndex + " which is out of bounds!");
+			Debug.Log("LoadScene: sceneIndex " + sceneIndex + " is out of bounds");
 			return;
 		}
 		
@@ -36,6 +41,13 @@ public class MenuManager : MonoBehaviour
 		
 		if (sceneName == "QuitScene") {
 			gm.QuitGame();
+		
+		// FIXME: sound effect test
+		} else if (sceneName == "TestSound") {
+			AudioManager am = gm.GetComponent<AudioManager>();
+			
+			int firstSoundEffect = am.effectsStartAtId;
+			gm.PlaySound(firstSoundEffect);
 			
 		} else {
 			gm.LoadScene(sceneName);

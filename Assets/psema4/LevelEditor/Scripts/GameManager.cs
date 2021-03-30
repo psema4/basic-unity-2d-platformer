@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
+	public static AudioManager am;
 	
 	void Awake() {
 		if (instance != null && instance != this) {
@@ -13,8 +14,13 @@ public class GameManager : MonoBehaviour
 			  
 		} else {
 		  instance = this;
+		  am = GetComponent<AudioManager>();
 		  DontDestroyOnLoad(this.gameObject);
         }
+	}
+	
+	void Start() {
+		PlayMusic(0);
 	}
 	
 	public void QuitGame() {
@@ -37,4 +43,12 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
     }
+	
+	public void PlayMusic(int clipNumber) {
+		am.Play(clipNumber);
+	}
+	
+	public void PlaySound(int clipNumber) {
+		am.PlayOneShot(clipNumber);
+	}
 }

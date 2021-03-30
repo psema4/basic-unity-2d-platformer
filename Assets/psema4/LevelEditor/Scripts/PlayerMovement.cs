@@ -12,6 +12,11 @@ public class PlayerMovement : MonoBehaviour
 	public LayerMask groundLayers;
 	
 	private float mx;
+	private GameManager gm;
+	
+	private void Start() {
+		gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+	}
 	
 	private void Update() {
 		mx = Input.GetAxisRaw("Horizontal");
@@ -28,8 +33,12 @@ public class PlayerMovement : MonoBehaviour
 	
 	private void Jump() {
 		Vector2 movement = new Vector2(rb.velocity.x, jumpForce);
-		
 		rb.velocity = movement;
+		
+		// play the first sound effect
+		AudioManager am = gm.GetComponent<AudioManager>();
+		int firstSoundEffect = am.effectsStartAtId;
+		gm.PlaySound(firstSoundEffect);
 	}
 
 	public bool IsGrounded() {
