@@ -31,25 +31,11 @@ public class PlayerMovement : MonoBehaviour
 		
 		rb.velocity = movement;
 	}
-	
+
 	public bool IsGrounded() {
-		Collider2D groundCheck = Physics2D.OverlapCircle(feet.position, 0.005f, groundLayers);
-		int numContacts = 0;
+		Collider2D groundCheck = Physics2D.OverlapCircle(feet.position, 0.5f, groundLayers);
 		
-		if (groundCheck != null) {
-			ContactPoint2D[] contacts = new ContactPoint2D[8];
-			
-			numContacts = groundCheck.GetContacts(contacts);
-			
-			if (numContacts > 0) {
-				// Debug.Log("groundCheck: numContacts: " + numContacts.ToString());
-				foreach (ContactPoint2D contact in contacts) {
-					if (contact.point.x != 0) {
-						Debug.Log("groundCheck: rogue contact: " + contact.point.x + ", " + contact.point.y);
-					}
-				}
-			}
-			
+		if (groundCheck != null) {			
 			return true;
 		}
 		
