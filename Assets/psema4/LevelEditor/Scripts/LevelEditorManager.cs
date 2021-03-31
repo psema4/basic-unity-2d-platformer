@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class LevelEditorManager : MonoBehaviour
@@ -8,7 +9,9 @@ public class LevelEditorManager : MonoBehaviour
 	[HideInInspector]
 	public LevelManager levelManager;
 	
+	public GameObject editorToolbar;
 	public TextMeshProUGUI levelText;
+	public TextMeshProUGUI levelMaxText;
 	public GameObject spritesContainer;
 	
 	public ItemController[] ItemButtons;
@@ -40,6 +43,13 @@ public class LevelEditorManager : MonoBehaviour
 	}
 	
 	public void UpdateLevel(int level) {
-		levelText.text = level.ToString();
+		int levelPretty = level + 1;
+		if (levelText != null) {
+			levelText.text = levelPretty.ToString();
+		}
+		
+		if (levelMaxText != null && levelManager != null) {
+			levelMaxText.text = levelManager.maxLevels.ToString();
+		}
 	}
 }

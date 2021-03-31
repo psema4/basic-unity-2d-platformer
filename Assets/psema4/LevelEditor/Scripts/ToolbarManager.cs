@@ -9,8 +9,25 @@ public class ToolbarManager : MonoBehaviour
 	public int currentTab = 0;
 	public GameObject[] tabs;
 	
+	private bool keyPressed = false;
+	
 	void Start() {
 		editor = GameObject.FindGameObjectWithTag("LevelEditorManager").GetComponent<LevelEditorManager>();
+	}
+	
+	void Update() {
+		if (!keyPressed) {
+			if (Input.GetKeyDown(KeyCode.BackQuote)) {
+				keyPressed = true;
+				editor.editorToolbar.SetActive(!editor.editorToolbar.activeInHierarchy);
+				editor.UpdateLevel(editor.levelManager.currentLevel);
+			}
+			
+		} else {
+			if (Input.GetKeyUp(KeyCode.BackQuote)) {
+				keyPressed = false;
+			}
+		}
 	}
 	
 	public void NextTab() {
