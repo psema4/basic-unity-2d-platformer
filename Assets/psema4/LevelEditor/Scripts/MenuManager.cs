@@ -20,7 +20,6 @@ public class MenuManager : MonoBehaviour
 			int sceneIndex = i + 0;
 			
 			buttons[i].onClick.AddListener(delegate {
-				Debug.Log("delegated listener, scene: " + sceneIndex);
 				LoadScene(sceneIndex);
 			});
 		}
