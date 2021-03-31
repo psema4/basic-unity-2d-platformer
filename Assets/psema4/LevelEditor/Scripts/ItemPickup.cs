@@ -16,7 +16,6 @@ public class ItemPickup : MonoBehaviour
 		int firstSoundEffect = am.effectsStartAtId;
 		gm.PlaySound(firstSoundEffect+1);
 		
-        Debug.Log(col.gameObject.name + " : " + gameObject.name + " : " + Time.time);
         Destroy(this.gameObject);
     }
 }

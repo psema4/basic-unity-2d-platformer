@@ -7,7 +7,8 @@ public class LevelManager : MonoBehaviour
 {
 	private LevelEditorManager editor;
 	private GameManager gm;
-	
+
+	public int maxLevels = 3;
 	public int currentLevel = 0;
 	public GameObject spritesContainer;
 	public GameObject[] prefabs;
@@ -31,10 +32,15 @@ public class LevelManager : MonoBehaviour
     // void Update() {}
 	
 	public void LoadLevelData(int levelId) {
-		Debug.Log("Loading Level " + currentLevel.ToString());
-		ClearLevelData();
-		ReadLevelData(currentLevel);
-		GenerateLevel();
+		if (levelId >= maxLevels) {
+			Debug.Log("Stub: END GAME");
+			
+		} else {
+			// Debug.Log("Loading Level " + currentLevel.ToString());
+			ClearLevelData();
+			ReadLevelData(currentLevel);
+			GenerateLevel();
+		}
 	}
 	
 	public void PreviousLevel() {
@@ -48,13 +54,26 @@ public class LevelManager : MonoBehaviour
 	}
 	
 	public void NextLevel() {
-		currentLevel += 1;
-		LoadLevelData(currentLevel);
+		if (currentLevel < maxLevels) {
+			currentLevel += 1;
+			LoadLevelData(currentLevel);
+			
+		} else {
+			Debug.Log("Stub: END GAME");
+		}
+	}
+	
+	// Triggered by game objects with the ItemNextLevel component
+	public void NextLevelAsync() {
+		StartCoroutine(DelayedNextLevel());
+	}
+	
+	IEnumerator DelayedNextLevel() {
+		yield return new WaitForSeconds(1);
+		NextLevel();
 	}
 	
 	public void ResetLevel() {
-		Debug.Log("Resetting Level " + currentLevel.ToString());
-
 		// Derived from https://stackoverflow.com/a/46359133
 		int i = 0;
 		GameObject[] allChildren = new GameObject[spritesContainer.transform.childCount];
@@ -73,7 +92,6 @@ public class LevelManager : MonoBehaviour
 	}
 	
 	public void ClearLevelData() {
-		Debug.Log("Clearing Level " + currentLevel.ToString() + " data");
 		spritesList.SpriteData.Clear();
 		
 		// remove sprites (FIXME: not dry)
@@ -92,11 +110,26 @@ public class LevelManager : MonoBehaviour
 		// --
 	}
 	
-	public void WriteCurrentLevelData() {
+	private void WriteCurrentLevelData() {
 		WriteLevelData(currentLevel);
 	}
 	
+	public void WriteEmptyLevelData(int levelId) {
+		if (levelId >= maxLevels) {
+			return;
+		}
+		
+		string message = "Created empty level " + levelId.ToString() + " data file";
+		string path = Application.dataPath + "/level_" + levelId.ToString() + ".txt";
+		File.WriteAllText(path, JsonUtility.ToJson(spritesList));
+		Debug.Log(message);
+	}
+	
 	public void WriteLevelData(int levelId) {
+		if (levelId >= maxLevels) {
+			return;
+		}
+		
 		string message = "";
 		string path = Application.dataPath + "/level_" + levelId.ToString() + ".txt";
 		
@@ -136,10 +169,14 @@ public class LevelManager : MonoBehaviour
 	}
 	
 	public void ReadLevelData(int levelId) {
+		if (levelId >= maxLevels) {
+			return;
+		}
+		
 		string path = Application.dataPath + "/level_" + levelId.ToString() + ".txt";
 		
 		if (!File.Exists(path)) {
-			WriteLevelData(levelId);
+			WriteEmptyLevelData(levelId);
 		}
 
 		spritesList = JsonUtility.FromJson<SpriteDataList>(File.ReadAllText(path));		
@@ -147,8 +184,6 @@ public class LevelManager : MonoBehaviour
 	
 	private void GenerateLevel() {
 		foreach (SpriteData sprite in spritesList.SpriteData) {
-			Debug.Log("x: " + sprite.x.ToString() + ", y: " + sprite.y.ToString() + ", id: " + sprite.prefabIndex.ToString());
-
 			GameObject sprGo = Instantiate(prefabs[sprite.prefabIndex], new Vector3(sprite.x, sprite.y, 0f), Quaternion.identity);
 			sprGo.transform.parent = spritesContainer.transform;
 		}

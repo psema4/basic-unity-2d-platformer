@@ -17,8 +17,17 @@ public class ItemNextLevel : MonoBehaviour
 		AudioManager am = gm.GetComponent<AudioManager>();
 		int firstSoundEffect = am.effectsStartAtId;
 		gm.PlaySound(firstSoundEffect+2);
+
+		Debug.Log(col.gameObject.name + " triggered ItemNextLevel");
+		// change to the next level after a brief delay
+		editor.levelManager.NextLevelAsync();
+
+		// destroy the player object:
+		if (col.gameObject.name.IndexOf("Player") == 0) {
+			Destroy(col.gameObject);
+		}
 		
-        Debug.Log(col.gameObject.name + " : " + gameObject.name + " : " + Time.time);
-		editor.levelManager.NextLevel();
+		// finally destroy our game object immediately
+		Destroy(this.gameObject);		
     }
 }

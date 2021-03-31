@@ -2036,6 +2036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72871056a5b56f84b84ff559f2fa0b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLevels: 5
   currentLevel: 0
   spritesContainer: {fileID: 842340030}
   prefabs:
